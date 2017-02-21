@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">PinCodeViewLib</string>
+    <string name="finger_auth_toast">Для входа по отпечатку просто приложите палец к сканеру</string>
 </resources>

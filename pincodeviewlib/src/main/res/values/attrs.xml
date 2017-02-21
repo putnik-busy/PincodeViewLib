@@ -1,23 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <declare-styleable name="CircleView">
-        <attr name="filled_drawable" format="integer" />
-        <attr name="empty_drawable" format="integer" />
+        <attr name="filled_drawable" format="integer"/>
+        <attr name="empty_drawable" format="integer"/>
         <attr name="error_drawable" format="integer"/>
-        <attr name="count_filled" format="integer" />
-        <attr name="count_all" format="integer" />
-        <attr name="drawable_spacing" format="dimension" />
-        <attr name="drawable_size" format="dimension" />
-        <attr name="error_char" format="boolean"/>
+        <attr name="number_filled" format="integer"/>
+        <attr name="number_all" format="integer"/>
+        <attr name="drawable_spacing" format="dimension"/>
+        <attr name="drawable_size" format="dimension"/>
+        <attr name="error_char" format="integer"/>
     </declare-styleable>
 
     <declare-styleable name="KeyBoardView">
-        <attr name="digits" format="integer" />
-        <attr name="input_password" format="string" />
-        <attr name="key_text_size" format="dimension" />
-        <attr name="divider_visible" format="boolean" />
-        <attr name="digit_spacing" format="dimension" />
-        <attr name="digit_vertical_padding" format="dimension" />
+        <attr name="digits" format="integer"/>
+        <attr name="input_password" format="string"/>
+        <attr name="key_text_size" format="dimension"/>
+        <attr name="divider_visible" format="boolean"/>
+        <attr name="digit_spacing" format="dimension"/>
+        <attr name="digit_vertical_padding" format="dimension"/>
+        <attr name="finger_visible" format="boolean"/>
     </declare-styleable>
 
     <declare-styleable name="InputTextView">

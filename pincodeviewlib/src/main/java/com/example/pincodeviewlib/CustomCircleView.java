@@ -1,5 +1,6 @@
 package com.example.pincodeviewlib;
 
+import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
@@ -14,7 +15,7 @@ import android.view.View;
 /**
  * @author Sergey Rodionov
  */
-public class CircleView extends View {
+public class CustomCircleView extends View {
     private int numberFilled;
     private int numberAll;
     private Bitmap filledDrawable;
@@ -31,19 +32,27 @@ public class CircleView extends View {
     private Paint circlePaint;
 
     private Context context;
-    private boolean mErrorChar;
+    private int mErrorChar;
 
-    public CircleView(Context context) {
-        this(context, null);
+    public CustomCircleView(Context context) {
+        super(context);
+        init(context, null, 0, 0);
     }
 
-    public CircleView(Context context, AttributeSet attrs) {
-        this(context, attrs, 0);
+    public CustomCircleView(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        init(context, attrs, 0, 0);
     }
 
-    public CircleView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomCircleView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr, 0);
+    }
+
+    @TargetApi(21)
+    public CustomCircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
+        super(context, attrs, defStyleAttr, defStyleRes);
+        init(context, attrs, defStyleAttr, defStyleRes);
     }
 
     private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
@@ -51,20 +60,20 @@ public class CircleView extends View {
         TypedArray values = context.getTheme().obtainStyledAttributes(attrs,
                 R.styleable.CircleView, defStyleAttr, defStyleRes);
         try {
-            numberAll = values.getInteger(R.styleable.CircleView_count_all, 4);
-            numberFilled = values.getInteger(R.styleable.CircleView_count_filled, 0);
-            mErrorChar = values.getBoolean(R.styleable.CircleView_error_char, false);
+            numberAll = values.getInteger(R.styleable.CircleView_number_all, 4);
+            numberFilled = values.getInteger(R.styleable.CircleView_number_filled, 0);
+            mErrorChar = values.getInteger(R.styleable.CircleView_error_char, -1);
 
             float drawableSize = values.getDimension(R.styleable.CircleView_drawable_size,
-                    getResources().getDimension(R.dimen.circle_size));
+                    getResources().getDimension(R.dimen.drawableDimen));
             drawableWidth = (int) drawableSize;
             drawableHeight = (int) drawableSize;
 
             filledDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_filled_drawable, -1));
             emptyDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_empty_drawable, -1));
-            drawableSpacing = (int) values.getDimension(R.styleable.CircleView_drawable_spacing,
-                    getResources().getDimension(R.dimen.circle_space));
             errorDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_error_drawable, -1));
+            drawableSpacing = (int) values.getDimension(R.styleable.CircleView_drawable_spacing,
+                    getResources().getDimension(R.dimen.drawable_spacing));
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -116,7 +125,9 @@ public class CircleView extends View {
         for (int i = 1; i <= numberFilled; i++) {
             canvas.drawBitmap(filledDrawable, x, y, paint);
             x += totalContentWidth;
-            if (isErrorChar()) {
+
+            if (i == getErrorChar() && getErrorChar() != -1) {
+                x -= totalContentWidth;
                 canvas.drawBitmap(errorDrawable, x, y, paint);
                 x += totalContentWidth;
                 break;
@@ -174,31 +185,30 @@ public class CircleView extends View {
         invalidate();
     }
 
-    public void setNumberAll(CircleView customView, int numberAll) {
+    public void setNumberAll(CustomCircleView customView, int numberAll) {
         setNumberAll(numberAll);
     }
 
-    @BindingAdapter("count_all")
-    public static void numberAll(CircleView view, int number_all) {
+    @BindingAdapter("number_all")
+    public static void numberAll(CustomCircleView view, int number_all) {
         view.setNumberAll(number_all);
     }
 
-    @BindingAdapter("count_filled")
-    public static void numberFilled(CircleView view, int number_filled) {
+    @BindingAdapter("number_filled")
+    public static void numberFilled(CustomCircleView view, int number_filled) {
         view.setNumberFilled(number_filled);
     }
 
     @BindingAdapter("error_char")
-    public static void errorChar(CircleView view, boolean errorChar) {
+    public static void errorChar(CustomCircleView view, int errorChar) {
         view.setErrorChar(errorChar);
     }
 
-    public boolean isErrorChar() {
+    public int getErrorChar() {
         return mErrorChar;
     }
 
-    public void setErrorChar(boolean errorChar) {
+    public void setErrorChar(int errorChar) {
         mErrorChar = errorChar;
     }
-
 }
