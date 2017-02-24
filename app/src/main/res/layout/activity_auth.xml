@@ -6,11 +6,11 @@
 
         <variable
             name="viewmodel"
-            type="com.example.sergey.sample.mvvm.viewmodel.PinViewModel" />
+            type="com.sergey.sample.mvvm.viewmodel.PinViewModel" />
 
         <variable
             name="model"
-            type="com.example.sergey.sample.mvvm.model.PinModel" />
+            type="com.sergey.sample.mvvm.model.PinModel" />
     </data>
 
     <RelativeLayout
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="@color/mainBackgroundColor">
 
-        <com.example.pincodeviewlib.CustomCircleView
+        <com.pincodeviewlib.CustomCircleView
             android:id="@+id/circleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             app:number_all="@{model.numberAllDrawablePinCode}"
             app:number_filled="@{model.numberFillDrawablePinCode}" />
 
-        <com.example.pincodeviewlib.CustomKeyBoardView
+        <com.pincodeviewlib.CustomKeyBoardView
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
             android:layout_height="250dp"

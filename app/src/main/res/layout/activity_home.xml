@@ -5,11 +5,11 @@
 
         <variable
             name="viewmodel"
-            type="com.example.sergey.sample.mvvm.viewmodel.HomeViewModel" />
+            type="com.sergey.sample.mvvm.viewmodel.HomeViewModel" />
 
         <variable
             name="model"
-            type="com.example.sergey.sample.mvvm.model.HomeModel" />
+            type="com.sergey.sample.mvvm.model.HomeModel" />
     </data>
 
     <RelativeLayout
