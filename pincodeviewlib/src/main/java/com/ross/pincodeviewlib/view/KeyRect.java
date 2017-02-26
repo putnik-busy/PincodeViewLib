@@ -1,4 +1,4 @@
-package com.pincodeviewlib;
+package com.ross.pincodeviewlib.view;
 
 import android.animation.Animator;
 import android.animation.ValueAnimator;

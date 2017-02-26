@@ -1,4 +1,4 @@
-package com.pincodeviewlib;
+package com.ross.pincodeviewlib.view;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -19,6 +19,10 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+
+import com.ross.pincodeviewlib.R;
+import com.ross.pincodeviewlib.utils.DimensionUtils;
+import com.ross.pincodeviewlib.utils.ToastUtil;
 
 import java.util.ArrayList;
 import java.util.HashMap;

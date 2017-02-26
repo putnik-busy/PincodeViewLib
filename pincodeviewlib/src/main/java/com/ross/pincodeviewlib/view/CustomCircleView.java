@@ -1,4 +1,4 @@
-package com.pincodeviewlib;
+package com.ross.pincodeviewlib.view;
 
 import android.annotation.TargetApi;
 import android.content.Context;
@@ -11,6 +11,8 @@ import android.graphics.drawable.Drawable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.view.View;
+
+import com.ross.pincodeviewlib.R;
 
 /**
  * @author Sergey Rodionov

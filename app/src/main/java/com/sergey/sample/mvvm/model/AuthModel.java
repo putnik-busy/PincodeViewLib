@@ -2,6 +2,7 @@ package com.sergey.sample.mvvm.model;
 
 import android.databinding.BaseObservable;
 import android.databinding.Bindable;
+
 import com.sergey.sample.BR;
 
 
@@ -9,13 +10,13 @@ import com.sergey.sample.BR;
  * @author Sergey Rodionov
  */
 
-public class PinModel extends BaseObservable {
+public class AuthModel extends BaseObservable {
 
     private String mInputPassword;
-    private int mNumberAllCountPinCode;
-    private boolean mError;
+    private boolean isError;
     private int mNumberAllDrawablePinCode;
     private int mNumberFillDrawablePinCode;
+    private String mUserPassword;
 
     @Bindable
     public String getInputPassword() {
@@ -28,22 +29,12 @@ public class PinModel extends BaseObservable {
     }
 
     @Bindable
-    public int getNumberAllCountPinCode() {
-        return mNumberAllCountPinCode;
-    }
-
-    public void setNumberAllCountPinCode(int numberAllCountPinCode) {
-        mNumberAllCountPinCode = numberAllCountPinCode;
-        notifyPropertyChanged(BR.numberAllCountPinCode);
-    }
-
-    @Bindable
     public boolean isError() {
-        return mError;
+        return isError;
     }
 
     public void setError(boolean error) {
-        mError = error;
+        isError = error;
         notifyPropertyChanged(BR.error);
     }
 
@@ -65,5 +56,15 @@ public class PinModel extends BaseObservable {
     public void setNumberFillDrawablePinCode(int numberFillDrawablePinCode) {
         mNumberFillDrawablePinCode = numberFillDrawablePinCode;
         notifyPropertyChanged(BR.numberFillDrawablePinCode);
+    }
+
+    @Bindable
+    public String getUserPassword() {
+        return mUserPassword;
+    }
+
+    public void setUserPassword(String userPassword) {
+        mUserPassword = userPassword;
+        notifyPropertyChanged(BR.userPassword);
     }
 }

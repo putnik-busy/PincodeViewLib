@@ -13,7 +13,7 @@ import com.sergey.sample.mvvm.viewmodel.HomeViewModel;
  * @author Sergey Rodionov
  */
 
-public class SecondActivity extends AppCompatActivity {
+public class ResultAuthActivity extends AppCompatActivity {
     private ActivityHomeBinding mBinding;
     private HomeModel mModel;
     private HomeViewModel mViewModel;

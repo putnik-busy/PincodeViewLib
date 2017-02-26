@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+        xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
 
         <variable
             name="viewmodel"
-            type="com.sergey.sample.mvvm.viewmodel.PinViewModel" />
+            type="com.sergey.sample.mvvm.viewmodel.AuthViewModel"/>
 
         <variable
             name="model"
-            type="com.sergey.sample.mvvm.model.PinModel" />
+            type="com.sergey.sample.mvvm.model.AuthModel"/>
     </data>
 
     <RelativeLayout
@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="@color/mainBackgroundColor">
 
-        <com.pincodeviewlib.CustomCircleView
+        <com.ross.pincodeviewlib.view.CustomCircleView
             android:id="@+id/circleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -32,17 +32,18 @@
             app:error_drawable="@drawable/error_dot"
             app:filled_drawable="@drawable/filled_dot"
             app:number_all="@{model.numberAllDrawablePinCode}"
-            app:number_filled="@{model.numberFillDrawablePinCode}" />
+            app:number_filled="@{model.numberFillDrawablePinCode}"/>
 
-        <com.pincodeviewlib.CustomKeyBoardView
+        <com.ross.pincodeviewlib.view.CustomKeyBoardView
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
+            android:background="@android:color/transparent"
             app:digits="@{model.numberAllDrawablePinCode}"
             app:divider_visible="false"
             app:error="@{model.error}"
             app:input_password="@={model.inputPassword}"
-            app:key_text_size="23.25sp" />
+            app:key_text_size="23.25sp"/>
     </RelativeLayout>
 </layout>

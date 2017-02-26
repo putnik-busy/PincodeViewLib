@@ -1,12 +1,13 @@
-package com.pincodeviewlib;
+package com.ross.pincodeviewlib.utils;
 
 import android.content.Context;
 import android.util.DisplayMetrics;
 import android.util.TypedValue;
 
 /**
- * Created by rodionovss on 03.08.2016.
+ * @author Sergey Rodionov
  */
+
 public class DimensionUtils {
 
     public static int dpToPx(Context context, int valueInDp) {

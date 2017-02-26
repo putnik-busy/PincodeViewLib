@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+
+        <variable
+            name="viewmodel"
+            type="com.sergey.sample.mvvm.viewmodel.PinCodeViewModel"/>
+
+        <variable
+            name="model"
+            type="com.sergey.sample.mvvm.model.PinCodeModel"/>
+    </data>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/mainBackgroundColor">
+
+        <android.support.v7.widget.AppCompatTextView
+            android:id="@+id/view7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36.48dp"
+            android:gravity="center"
+            android:text="@string/text_set_pin_code"
+            android:textSize="13.44sp"
+            app:fontName='@{"OpenSans-Regular.ttf"}'/>
+
+        <com.ross.pincodeviewlib.view.CustomCircleView
+            android:id="@+id/view3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/linearLayout2"
+            android:layout_alignStart="@+id/linearLayout2"
+            android:layout_below="@+id/view7"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20dp"
+            app:drawable_size="11.52dp"
+            app:drawable_spacing="30.0dp"
+            app:empty_drawable="@drawable/empty_dot"
+            app:error_char="@{model.errorChar}"
+            app:error_drawable="@drawable/error_dot"
+            app:filled_drawable="@drawable/filled_dot"
+            app:number_all="@{model.numberAllDrawablePinCode}"
+            app:number_filled="@{model.numberFillDrawablePinCode}"/>
+
+        <LinearLayout
+            android:id="@+id/linearLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/view7"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="51.19dp"
+            android:orientation="vertical"
+            android:visibility="@{model.visibleSecondLinePassword}">
+
+            <android.support.v7.widget.AppCompatTextView
+                android:id="@+id/view6"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="20dp"
+                android:layout_marginTop="20dp"
+                android:gravity="center_horizontal"
+                android:text="@string/repeat_pin_code"
+                android:textSize="13.44sp"/>
+
+            <com.ross.pincodeviewlib.view.CustomCircleView
+                android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                app:drawable_size="11.52dp"
+                app:drawable_spacing="30.0dp"
+                app:empty_drawable="@drawable/empty_dot"
+                app:error_char="@{model.errorChar}"
+                app:error_drawable="@drawable/error_dot"
+                app:filled_drawable="@drawable/filled_dot"
+                app:number_all="@{model.numberAllDrawablePinCode}"
+                app:number_filled="@{model.numberSecondFillDrawablePinCode}"/>
+
+        </LinearLayout>
+
+        <com.ross.pincodeviewlib.view.CustomKeyBoardView
+            android:id="@+id/keyboard"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:layout_alignParentBottom="true"
+            app:clearText="@{model.clearText}"
+            app:digits="@{model.numberAllDrawablePinCode}"
+            app:divider_visible="false"
+            app:error="@{model.error}"
+            app:errorChar="@{model.errorChar}"
+            app:input_password="@={model.globalUserPassword}"
+            app:key_text_size="23.25sp"/>
+    </RelativeLayout>
+</layout>
