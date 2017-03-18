@@ -4,6 +4,10 @@
     <dimen name="digit_vertical_padding">40.0dp</dimen>
     <dimen name="digit_horizontal_padding">15.0dp</dimen>
     <dimen name="key_pad_min_height">250.0dp</dimen>
+    <dimen name="erase_icon_width">19dp</dimen>
+    <dimen name="erase_icon_height">15dp</dimen>
+    <dimen name="finger_icon_width">19dp</dimen>
+    <dimen name="finger_icon_height">15dp</dimen>
 
     <dimen name="input_text_size">24.0sp</dimen>
     <dimen name="input_text_space">10.0dp</dimen>

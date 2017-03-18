@@ -14,73 +14,81 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.graphics.Typeface;
 import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.text.TextPaint;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.SparseIntArray;
 import android.view.MotionEvent;
 import android.view.View;
 
 import com.ross.pincodeviewlib.R;
+import com.ross.pincodeviewlib.constants.Constants;
 import com.ross.pincodeviewlib.utils.DimensionUtils;
 import com.ross.pincodeviewlib.utils.ToastUtil;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+
+import static com.ross.pincodeviewlib.constants.Constants.KEY_PAD_ROWS;
 
 /**
  * @author Sergey Rodionov
  */
 public class CustomKeyBoardView extends View {
-    private final int KEYS_COUNT = 12;
-    private final String eraseChar = "\u232B";
-    private final int KEY_PAD_COLS = 3;
-    private final int KEY_PAD_ROWS = 4;
-    private final double eraseIconWidth = 19.36;
-    private final double eraseIconHeight = 15.36;
-    private final double fingerIconWidth = 15.36;
-    private final double fingerIconHeight = 15.36;
-    private Paint paint;
-    private int kpStartX;
-    private int kpStartY;
-    private ArrayList<KeyRect> keyRects = new ArrayList<>();
-    private int keyWidth;
-    private int keyHeight;
-    private TextChangeListener textChangeListener;
-    private int digits;
-    private boolean fingerAuth;
-    private int errorChar = -1;
-    private boolean clearText;
 
-    private Map<Integer, Integer> touchXMap = new HashMap<>();
-    private Map<Integer, Integer> touchYMap = new HashMap<>();
+    private double eraseIconWidth;
+    private double eraseIconHeight;
+    private double fingerIconWidth;
+    private double fingerIconHeight;
 
-    private Typeface typeFace;
-    private TextPaint textPaint;
     private float keyTextSize;
-    private Paint circlePaint;
 
+    private int keyViewStartX;
+    private int keyViewStartY;
+    private int keyViewWidth;
+    private int keyViewHeight;
+    private int digits;
+    private int errorChar = -1;
+
+    private SparseIntArray mTouchXMap;
+    private SparseIntArray mTouchYMap;
+
+    private Typeface mTypeface;
+    private TextPaint mTextPaint;
+    private Paint mCirclePaint;
+    private Paint mPaint;
 
     private boolean dividerVisible;
     private boolean fingerIconVisible;
-    //private Context context;
-    private String passCodeText = "";
     private boolean blockInputChar;
+    private boolean clearText;
+    private boolean longPressed;
+    private boolean fingerAuth;
 
-    private Handler handler = new Handler();
-    private boolean mLongPressed;
+    private String passCodeText = "";
+
+    private Handler mHandler;
     private Runnable mLongPress;
+    private List<KeyRect> mListKeyRectView;
+    private TextChangeListener mTextChangeListener;
 
-    public CustomKeyBoardView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs);
+    public CustomKeyBoardView(Context context) {
+        this(context, null);
     }
 
+    public CustomKeyBoardView(Context context, AttributeSet attrs) {
+        this(context, attrs, 0);
+    }
 
-    public void init(Context context, AttributeSet attrs) {
-        //this.context = context;
+    public CustomKeyBoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+        super(context, attrs, defStyleAttr);
+        init(context, attrs, defStyleAttr);
+    }
+
+    public void init(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray values = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.KeyBoardView, 0, 0);
+                R.styleable.KeyBoardView, defStyleAttr, 0);
         try {
 
             digits = values.getInteger(R.styleable.KeyBoardView_digits, 0);
@@ -100,6 +108,20 @@ public class CustomKeyBoardView extends View {
 
             int digitVerticalPadding = (int) values.getDimension(R.styleable.KeyBoardView_digit_vertical_padding,
                     getResources().getDimension(R.dimen.digit_vertical_padding));
+            eraseIconWidth = (int) values.getDimension(R.styleable.KeyBoardView_erase_icon_width,
+                    getResources().getDimension(R.dimen.erase_icon_width));
+            eraseIconHeight = (int) values.getDimension(R.styleable.KeyBoardView_erase_icon_height,
+                    getResources().getDimension(R.dimen.erase_icon_height));
+
+            fingerIconWidth = (int) values.getDimension(R.styleable.KeyBoardView_finger_icon_width,
+                    getResources().getDimension(R.dimen.finger_icon_width));
+            fingerIconHeight = (int) values.getDimension(R.styleable.KeyBoardView_finger_icon_height,
+                    getResources().getDimension(R.dimen.finger_icon_height));
+
+            mListKeyRectView = new ArrayList<>();
+            mTouchXMap = new SparseIntArray();
+            mTouchYMap = new SparseIntArray();
+            mHandler = new Handler();
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,21 +131,21 @@ public class CustomKeyBoardView extends View {
     }
 
     private void preparePaint() {
-        paint = new Paint(TextPaint.ANTI_ALIAS_FLAG);
-        textPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
-        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circlePaint.setStyle(Paint.Style.FILL);
-        paint.setStyle(Paint.Style.FILL);
-        textPaint.setStyle(Paint.Style.FILL);
-        textPaint.setColor(Color.argb(255, 0, 0, 0));
-        textPaint.density = getResources().getDisplayMetrics().density;
-        textPaint.setTextSize(keyTextSize);
+        mPaint = new Paint(TextPaint.ANTI_ALIAS_FLAG);
+        mTextPaint = new TextPaint(TextPaint.ANTI_ALIAS_FLAG);
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint.setStyle(Paint.Style.FILL);
+        mPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setStyle(Paint.Style.FILL);
+        mTextPaint.setColor(Color.argb(255, 0, 0, 0));
+        mTextPaint.density = getResources().getDisplayMetrics().density;
+        mTextPaint.setTextSize(keyTextSize);
     }
 
-    public void setTypeFace(Typeface typeFace) {
-        if (this.typeFace != typeFace) {
-            this.typeFace = typeFace;
-            textPaint.setTypeface(typeFace);
+    public void setTypeface(Typeface typeface) {
+        if (mTypeface != typeface) {
+            mTypeface = typeface;
+            mTextPaint.setTypeface(typeface);
             requestLayout();
             postInvalidate();
         }
@@ -131,40 +153,41 @@ public class CustomKeyBoardView extends View {
 
     public void setKeyTextColor(int color) {
         ColorStateList colorStateList = ColorStateList.valueOf(color);
-        textPaint.setColor(colorStateList.getColorForState(getDrawableState(), 0));
+        mTextPaint.setColor(colorStateList.getColorForState(getDrawableState(), 0));
         postInvalidate();
     }
 
     public void setKeyTextSize(float size) {
-        textPaint.setTextSize(size);
+        mTextPaint.setTextSize(size);
         requestLayout();
         postInvalidate();
     }
 
     private void initialiseKeyRects() {
-        keyRects.clear();
-        int x = kpStartX, y = kpStartY;
-        for (int i = 1; i <= KEYS_COUNT; i++) {
-            keyRects.add(
+        mListKeyRectView.clear();
+        int x = keyViewStartX, y = keyViewStartY;
+        int keysCount = getKeysCount();
+        for (int i = 1; i <= keysCount; i++) {
+            mListKeyRectView.add(
                     new KeyRect(this,
-                            new Rect(x, y, x + keyWidth, y + keyHeight),
+                            new Rect(x, y, x + keyViewWidth, y + keyViewHeight),
                             String.valueOf(i)));
-            x += keyWidth;
+            x += keyViewWidth;
             if (i % 3 == 0) {
-                y += keyHeight;
-                x = kpStartX;
+                y += keyViewHeight;
+                x = keyViewStartX;
             }
         }
 
         if (fingerIconVisible) {
-            keyRects.get(9).setBitmapValue(
+            mListKeyRectView.get(9).setBitmapValue(
                     returnScaledBitmapFromResource(R.drawable.finger, fingerIconWidth, fingerIconHeight));
         }
 
-        keyRects.get(9).setValue("");
-        keyRects.get(10).setValue("0");
-        keyRects.get(11).setValue(eraseChar);
-        keyRects.get(11).setBitmapValue(
+        mListKeyRectView.get(9).setValue("");
+        mListKeyRectView.get(10).setValue("0");
+        mListKeyRectView.get(11).setValue(Constants.ERASE_CHAR);
+        mListKeyRectView.get(11).setBitmapValue(
                 returnScaledBitmapFromResource(R.drawable.erase, eraseIconWidth, eraseIconHeight));
     }
 
@@ -175,10 +198,10 @@ public class CustomKeyBoardView extends View {
     }
 
     private void computeKeyboardStartXY() {
-        kpStartX = 0;
-        kpStartY = 0;
-        keyWidth = getMeasuredWidth() / KEY_PAD_COLS;
-        keyHeight = getMeasuredHeight() / KEY_PAD_ROWS;
+        keyViewStartX = 0;
+        keyViewStartY = 0;
+        keyViewWidth = getMeasuredWidth() / Constants.KEY_PAD_COLS;
+        keyViewHeight = getMeasuredHeight() / Constants.KEY_PAD_ROWS;
         initialiseKeyRects();
     }
 
@@ -189,51 +212,53 @@ public class CustomKeyBoardView extends View {
     }
 
     private void drawDividerHorizontal(Canvas canvas, KeyRect rect) {
-        paint.setColor(Color.argb(255, 0, 0, 0));
-        paint.setAlpha(40);
-        canvas.drawLine(0, rect.rect.bottom, getMeasuredWidth(), rect.rect.bottom, paint);
+        mPaint.setColor(Color.argb(255, 0, 0, 0));
+        mPaint.setAlpha(40);
+        canvas.drawLine(0, rect.getRect().bottom, getMeasuredWidth(), rect.getRect().bottom, mPaint);
     }
 
     private void drawDividerVertical(Canvas canvas, KeyRect rect) {
-        paint.setColor(Color.argb(255, 0, 0, 0));
-        paint.setAlpha(40);
-        canvas.drawLine(rect.rect.right, 0, rect.rect.right, getMeasuredHeight(), paint);
+        mPaint.setColor(Color.argb(255, 0, 0, 0));
+        mPaint.setAlpha(40);
+        canvas.drawLine(rect.getRect().right, 0, rect.getRect().right, getMeasuredHeight(), mPaint);
     }
 
     private void drawKeyPad(Canvas canvas) {
-        for (KeyRect rect : keyRects) {
+        for (KeyRect rect : mListKeyRectView) {
 
-          /*  if (rect == keyRects.get(9) || rect == keyRects.get(11)) {
+          /*  if (mRect == keyRects.get(9) || mRect == keyRects.get(11)) {
                 Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
                 tempPaint.setColor(Color.GRAY);
-                canvas.drawRect(rect.rect, tempPaint);
+                canvas.drawRect(mRect.mRect, tempPaint);
             }*/
 
-            //textPaint.setColor(Color.argb(255, 0, 0, 0));
-            if (rect == keyRects.get(11) || (rect == keyRects.get(9) && fingerIconVisible &&
-                    rect.mBitmapValue != null)) {
-                float iconWidth = rect.mBitmapValue.getScaledWidth(canvas);
-                float iconHeight = rect.mBitmapValue.getHeight();
-                canvas.drawBitmap(rect.mBitmapValue, rect.rect.exactCenterX() - iconWidth / 2,
-                        (rect.rect.exactCenterY() - iconHeight / 5), paint);
+            //mTextPaint.setColor(Color.argb(255, 0, 0, 0));
+            if (rect == mListKeyRectView.get(11) || (rect == mListKeyRectView.get(9) &&
+                    fingerIconVisible && rect.getBitmapValue() != null)) {
+
+                float iconWidth = rect.getBitmapValue().getScaledWidth(canvas);
+                float iconHeight = rect.getBitmapValue().getHeight();
+                canvas.drawBitmap(rect.getBitmapValue(), rect.getRect().exactCenterX() - iconWidth / 2,
+                        (rect.getRect().exactCenterY() - iconHeight / 5), mPaint);
             } else {
-                textPaint.setColor(Color.WHITE);
-                float textWidth = textPaint.measureText(rect.value);
-                canvas.drawText(rect.value, rect.rect.exactCenterX() - textWidth / 2,
-                        rect.rect.exactCenterY() + textPaint.getTextSize() / 2, textPaint);
-                if (rect.hasRippleEffect) {
-                    circlePaint.setAlpha(rect.circleAlpha);
-                    canvas.drawCircle(rect.rect.exactCenterX(), rect.rect.exactCenterY(),
-                            rect.rippleRadius, circlePaint);
+                mTextPaint.setColor(Color.WHITE);
+                float textWidth = mTextPaint.measureText(rect.getValue());
+                canvas.drawText(rect.getValue(), rect.getRect().exactCenterX() - textWidth / 2,
+                        rect.getRect().exactCenterY() + mTextPaint.getTextSize() / 2, mTextPaint);
+                if (rect.isHasRippleEffect()) {
+                    mCirclePaint.setAlpha(rect.getCircleAlpha());
+                    canvas.drawCircle(rect.getRect().exactCenterX(), rect.getRect().exactCenterY(),
+                            rect.getRippleRadius(), mCirclePaint);
                 }
             }
 
             if (dividerVisible) {
-                if (rect == keyRects.get(2) || rect == keyRects.get(5) || rect == keyRects.get(8)) {
+                if (rect == mListKeyRectView.get(2) || rect == mListKeyRectView.get(5) ||
+                        rect == mListKeyRectView.get(8)) {
                     drawDividerHorizontal(canvas, rect);
                 }
 
-                if (rect == keyRects.get(0) || rect == keyRects.get(1)) {
+                if (rect == mListKeyRectView.get(0) || rect == mListKeyRectView.get(1)) {
                     drawDividerVertical(canvas, rect);
                 }
             }
@@ -250,7 +275,7 @@ public class CustomKeyBoardView extends View {
         }
 
         if (heightMode != MeasureSpec.EXACTLY) {
-            double height = MeasureSpec.getSize(heightMeasureSpec) - (keyHeight * KEY_PAD_ROWS);
+            double height = MeasureSpec.getSize(heightMeasureSpec) - (keyViewHeight * KEY_PAD_ROWS);
             measuredHeight = (int) height;
         } else {
             measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
@@ -269,8 +294,8 @@ public class CustomKeyBoardView extends View {
         switch (event.getActionMasked()) {
             case MotionEvent.ACTION_DOWN:
                 int pointerDownId = event.getPointerId(event.getActionIndex());
-                touchXMap.put(pointerDownId, (int) event.getX());
-                touchYMap.put(pointerDownId, (int) event.getY());
+                mTouchXMap.put(pointerDownId, (int) event.getX());
+                mTouchYMap.put(pointerDownId, (int) event.getY());
                 longPressed(pointerDownId);
                 break;
 
@@ -279,16 +304,16 @@ public class CustomKeyBoardView extends View {
                 int pointerUpIndex = event.findPointerIndex(pointerUpId);
                 int eventX = (int) event.getX(pointerUpIndex);
                 int eventY = (int) event.getY(pointerUpIndex);
-                handler.removeCallbacks(mLongPress);
-                mLongPressed = false;
-                findKeyPressed(touchXMap.get(pointerUpId), touchYMap.get(pointerUpId), eventX, eventY);
+                mHandler.removeCallbacks(mLongPress);
+                longPressed = false;
+                findKeyPressed(mTouchXMap.get(pointerUpId), mTouchYMap.get(pointerUpId), eventX, eventY);
                 break;
 
             case MotionEvent.ACTION_POINTER_DOWN:
                 Log.i("Pointer", "down");
                 int pointerActionDownId = event.getPointerId(event.getActionIndex());
-                touchXMap.put(pointerActionDownId, (int) event.getX(event.getActionIndex()));
-                touchYMap.put(pointerActionDownId, (int) event.getY(event.getActionIndex()));
+                mTouchXMap.put(pointerActionDownId, (int) event.getX(event.getActionIndex()));
+                mTouchYMap.put(pointerActionDownId, (int) event.getY(event.getActionIndex()));
                 longPressed(pointerActionDownId);
                 break;
 
@@ -297,10 +322,10 @@ public class CustomKeyBoardView extends View {
                 int pointerActionUpId = event.getPointerId(pointerActionUpIndex);
                 int eventPointerX = (int) event.getX(pointerActionUpIndex);
                 int eventPointerY = (int) event.getY(pointerActionUpIndex);
-                handler.removeCallbacks(mLongPress);
-                mLongPressed = false;
-                findKeyPressed(touchXMap.get(pointerActionUpId),
-                        touchYMap.get(pointerActionUpId), eventPointerX, eventPointerY);
+                mHandler.removeCallbacks(mLongPress);
+                longPressed = false;
+                findKeyPressed(mTouchXMap.get(pointerActionUpId),
+                        mTouchYMap.get(pointerActionUpId), eventPointerX, eventPointerY);
                 break;
 
             case MotionEvent.ACTION_MOVE:
@@ -311,22 +336,22 @@ public class CustomKeyBoardView extends View {
     }
 
     private void findKeyPressed(int downEventX, int downEventY, int upEventX, int upEventY) {
-        for (final KeyRect keyRect : keyRects) {
-            if (keyRect.rect.contains(downEventX, downEventY)
-                    && keyRect.rect.contains(upEventX, upEventY)) {
+        for (final KeyRect keyRect : mListKeyRectView) {
+            if (keyRect.getRect().contains(downEventX, downEventY)
+                    && keyRect.getRect().contains(upEventX, upEventY)) {
                 keyRect.playRippleAnim(new KeyRect.RippleAnimListener() {
                     @Override
                     public void onStart() {
-                        if (keyRect.value.equals("") && fingerIconVisible) {
+                        if (keyRect.getValue().equals("") && fingerIconVisible) {
                             ToastUtil.display(getContext(), R.string.finger_auth_toast);
                         }
                         if (passCodeText.length() == digits && isClearText() &&
-                                !keyRect.value.equals(eraseChar) && getErrorChar() == -1) {
+                                !keyRect.getValue().equals(Constants.ERASE_CHAR) && getErrorChar() == -1) {
                             passCodeText = "";
                             setBlockInputChar(false);
                         }
                         int length = passCodeText.length();
-                        if (keyRect.value.equals(eraseChar)) {
+                        if (keyRect.getValue().equals(Constants.ERASE_CHAR)) {
                             if (isClearText()) {
                                 passCodeText = "";
                                 setBlockInputChar(false);
@@ -335,14 +360,14 @@ public class CustomKeyBoardView extends View {
                                 setBlockInputChar(false);
                                 passCodeText = passCodeText.substring(0, passCodeText.length() - 1);
                             }
-                        } else if (!keyRect.value.isEmpty() && length <= digits && getErrorChar() == -1) {
+                        } else if (!keyRect.getValue().isEmpty() && length <= digits && getErrorChar() == -1) {
                             if (!isBlockInputChar()) {
                                 setClearText(false);
-                                passCodeText += keyRect.value;
+                                passCodeText += keyRect.getValue();
                             }
                             if (passCodeText.length() == digits) setBlockInputChar(true);
                         }
-                        if (!keyRect.value.isEmpty()) {
+                        if (!keyRect.getValue().isEmpty()) {
                             notifyListener();
                         }
                     }
@@ -352,16 +377,17 @@ public class CustomKeyBoardView extends View {
 
                     }
                 });
-            } else if (keyRect.rect.contains(downEventX, downEventY) && upEventX == 0 && upEventY == 0 && keyRect.value.equals(eraseChar)) {
+            } else if (keyRect.getRect().contains(downEventX, downEventY) && upEventX == 0 &&
+                    upEventY == 0 && keyRect.getRect().equals(Constants.ERASE_CHAR)) {
                 int length = passCodeText.length();
                 if (length > 0) {
-                    while (mLongPressed) {
+                    while (longPressed) {
                         if (passCodeText.length() > 0) {
                             setBlockInputChar(false);
                             passCodeText = passCodeText.substring(0, passCodeText.length() - 1);
                             notifyListener();
                         } else {
-                            mLongPressed = false;
+                            longPressed = false;
                             break;
                         }
                     }
@@ -374,13 +400,13 @@ public class CustomKeyBoardView extends View {
         if (mLongPress == null) {
             mLongPress = new Runnable() {
                 public void run() {
-                    mLongPressed = true;
-                    findKeyPressed(touchXMap.get(downEventId), touchYMap.get(downEventId), 0, 0);
+                    longPressed = true;
+                    findKeyPressed(mTouchXMap.get(downEventId), mTouchYMap.get(downEventId), 0, 0);
                 }
             };
         }
 
-        handler.postDelayed(mLongPress, 1000);
+        mHandler.postDelayed(mLongPress, 1000);
     }
 
     public void reset() {
@@ -388,29 +414,29 @@ public class CustomKeyBoardView extends View {
         invalidateAndNotifyListener();
     }
 
-    public interface TextChangeListener {
+    interface TextChangeListener {
         void onTextChanged(String text);
     }
 
     private void invalidateAndNotifyListener() {
         Log.i("New text", passCodeText);
-        if (textChangeListener != null) {
-            textChangeListener.onTextChanged(passCodeText);
+        if (mTextChangeListener != null) {
+            mTextChangeListener.onTextChanged(passCodeText);
         }
     }
 
     private void notifyListener() {
-        if (textChangeListener != null) {
-            textChangeListener.onTextChanged(passCodeText);
+        if (mTextChangeListener != null) {
+            mTextChangeListener.onTextChanged(passCodeText);
         }
     }
 
     public void setOnTextChangeListener(TextChangeListener listener) {
-        this.textChangeListener = listener;
+        mTextChangeListener = listener;
     }
 
     public void removeOnTextChangeListener() {
-        this.textChangeListener = null;
+        mTextChangeListener = null;
     }
 
     public void setError(boolean reset) {
@@ -418,7 +444,7 @@ public class CustomKeyBoardView extends View {
             reset();
             setBlockInputChar(false);
         }
-        for (KeyRect keyRect : keyRects) {
+        for (KeyRect keyRect : mListKeyRectView) {
             keyRect.setError();
         }
     }
@@ -439,13 +465,17 @@ public class CustomKeyBoardView extends View {
 
     public void setFingerAuth(boolean fingerAuth) {
         this.fingerAuth = fingerAuth;
-        for (KeyRect rect : keyRects) {
-            if (rect == keyRects.get(9) && fingerIconVisible) {
+        for (KeyRect rect : mListKeyRectView) {
+            if (rect == mListKeyRectView.get(9) && fingerIconVisible) {
                 rect.setBitmapValue(returnScaledBitmapFromResource(R.drawable.form_filled,
                         fingerIconWidth, fingerIconHeight));
             }
         }
         invalidate();
+    }
+
+    public int getKeysCount() {
+        return Constants.KEY_PAD_ROWS * Constants.KEY_PAD_COLS;
     }
 
     public int getDigitLength() {

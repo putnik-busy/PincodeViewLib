@@ -10,9 +10,11 @@ import android.util.TypedValue;
 
 public class DimensionUtils {
 
-    public static int dpToPx(Context context, int valueInDp) {
+    private static int dpToPx(Context context, int valueInDp) {
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        return (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics);
+        float density = metrics.density;
+        return (int) ((int) TypedValue.applyDimension(
+                TypedValue.COMPLEX_UNIT_DIP, valueInDp, metrics) / density);
     }
 
     public static int dpToPx(Context context, double valueInDp) {

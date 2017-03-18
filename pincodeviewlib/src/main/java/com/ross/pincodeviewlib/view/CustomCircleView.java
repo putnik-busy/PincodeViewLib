@@ -1,6 +1,5 @@
 package com.ross.pincodeviewlib.view;
 
-import android.annotation.TargetApi;
 import android.content.Context;
 import android.content.res.TypedArray;
 import android.databinding.BindingAdapter;
@@ -8,7 +7,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.drawable.Drawable;
-import android.text.TextPaint;
+import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.view.View;
 
@@ -18,62 +17,51 @@ import com.ross.pincodeviewlib.R;
  * @author Sergey Rodionov
  */
 public class CustomCircleView extends View {
+
     private int numberFilled;
     private int numberAll;
-    private Bitmap filledDrawable;
-    private Bitmap emptyDrawable;
-    private Bitmap errorDrawable;
     private int drawableSpacing;
-
-    private Paint paint;
     private int drawableWidth;
     private int drawableHeight;
     private int drawableStartX;
     private int drawableStartY;
+    private int errorChar;
 
-    private Paint circlePaint;
+    private Paint mCirclePaint;
 
-    private Context context;
-    private int mErrorChar;
+    private Bitmap mFilledDrawable;
+    private Bitmap mEmptyDrawable;
+    private Bitmap mErrorDrawable;
 
     public CustomCircleView(Context context) {
-        super(context);
-        init(context, null, 0, 0);
+        this(context, null);
     }
 
-    public CustomCircleView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-        init(context, attrs, 0, 0);
+    public CustomCircleView(Context context, @Nullable AttributeSet attrs) {
+        this(context, attrs, 0);
     }
 
-    public CustomCircleView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public CustomCircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-        init(context, attrs, defStyleAttr, 0);
+        init(context, attrs, defStyleAttr);
     }
 
-    @TargetApi(21)
-    public CustomCircleView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
-        init(context, attrs, defStyleAttr, defStyleRes);
-    }
-
-    private void init(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        this.context = context;
+    private void init(Context context, AttributeSet attrs, int defStyleAttr) {
         TypedArray values = context.getTheme().obtainStyledAttributes(attrs,
-                R.styleable.CircleView, defStyleAttr, defStyleRes);
+                R.styleable.CircleView, defStyleAttr, 0);
         try {
             numberAll = values.getInteger(R.styleable.CircleView_number_all, 4);
             numberFilled = values.getInteger(R.styleable.CircleView_number_filled, 0);
-            mErrorChar = values.getInteger(R.styleable.CircleView_error_char, -1);
+            errorChar = values.getInteger(R.styleable.CircleView_error_char, -1);
 
             float drawableSize = values.getDimension(R.styleable.CircleView_drawable_size,
                     getResources().getDimension(R.dimen.drawableDimen));
             drawableWidth = (int) drawableSize;
             drawableHeight = (int) drawableSize;
 
-            filledDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_filled_drawable, -1));
-            emptyDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_empty_drawable, -1));
-            errorDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_error_drawable, -1));
+            mFilledDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_filled_drawable, -1));
+            mEmptyDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_empty_drawable, -1));
+            mErrorDrawable = getBitmap(values.getResourceId(R.styleable.CircleView_error_drawable, -1));
             drawableSpacing = (int) values.getDimension(R.styleable.CircleView_drawable_spacing,
                     getResources().getDimension(R.dimen.drawable_spacing));
 
@@ -85,10 +73,8 @@ public class CustomCircleView extends View {
     }
 
     private void preparePaint() {
-        paint = new Paint(TextPaint.ANTI_ALIAS_FLAG);
-        circlePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        circlePaint.setStyle(Paint.Style.FILL);
-        paint.setStyle(Paint.Style.FILL);
+        mCirclePaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+        mCirclePaint.setStyle(Paint.Style.FILL);
     }
 
     private void computeDrawableStartXY() {
@@ -100,8 +86,7 @@ public class CustomCircleView extends View {
     private int getTotalWidth() {
         int totalDrawableWidth = numberAll * drawableWidth;
         int totalPaddingWidth = drawableSpacing * (numberAll - 1);
-        int totalReqWidth = totalDrawableWidth + totalPaddingWidth;
-        return totalReqWidth;
+        return totalDrawableWidth + totalPaddingWidth;
     }
 
     private Bitmap getBitmap(int resId) {
@@ -121,22 +106,22 @@ public class CustomCircleView extends View {
     }
 
     private void drawDrawable(Canvas canvas) {
-        paint.setAlpha(255);
+        mCirclePaint.setAlpha(255);
         int x = drawableStartX, y = drawableStartY;
         int totalContentWidth = drawableWidth + drawableSpacing;
         for (int i = 1; i <= numberFilled; i++) {
-            canvas.drawBitmap(filledDrawable, x, y, paint);
+            canvas.drawBitmap(mFilledDrawable, x, y, mCirclePaint);
             x += totalContentWidth;
 
             if (i == getErrorChar() && getErrorChar() != -1) {
                 x -= totalContentWidth;
-                canvas.drawBitmap(errorDrawable, x, y, paint);
+                canvas.drawBitmap(mErrorDrawable, x, y, mCirclePaint);
                 x += totalContentWidth;
                 break;
             }
         }
         for (int i = 1; i <= (numberAll - numberFilled); i++) {
-            canvas.drawBitmap(emptyDrawable, x, y, paint);
+            canvas.drawBitmap(mEmptyDrawable, x, y, mCirclePaint);
             x += totalContentWidth;
         }
     }
@@ -207,10 +192,10 @@ public class CustomCircleView extends View {
     }
 
     public int getErrorChar() {
-        return mErrorChar;
+        return errorChar;
     }
 
     public void setErrorChar(int errorChar) {
-        mErrorChar = errorChar;
+        this.errorChar = errorChar;
     }
 }
