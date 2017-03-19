@@ -13,7 +13,7 @@ import static com.ross.pincodeviewlib.constants.Constants.MAX_RIPPLE_ALPHA;
 /**
  * @author Sergey Rodionov
  */
-class KeyRect {
+class KeyRectView {
 
     private int rippleRadius;
     private int requiredRadius;
@@ -30,7 +30,7 @@ class KeyRect {
     private InterpolatedValueListener mInterpolatedValueListener;
     private RippleAnimListener mRippleAnimListener;
 
-    KeyRect(View view, Rect rect, String value) {
+    KeyRectView(View view, Rect rect, String value) {
         mView = view;
         mRect = rect;
         this.value = value;
@@ -134,7 +134,7 @@ class KeyRect {
 
     void playRippleAnim(RippleAnimListener listener) {
         mRippleAnimListener = listener;
-        setOnValueUpdateListener(new KeyRect.InterpolatedValueListener() {
+        setOnValueUpdateListener(new KeyRectView.InterpolatedValueListener() {
             @Override
             public void onValueUpdated() {
                 mView.invalidate(mRect);

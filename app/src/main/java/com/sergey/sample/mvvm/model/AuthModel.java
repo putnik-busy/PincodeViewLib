@@ -17,6 +17,7 @@ public class AuthModel extends BaseObservable {
     private int mNumberAllDrawablePinCode;
     private int mNumberFillDrawablePinCode;
     private String mUserPassword;
+    private boolean mFingerAuth;
 
     @Bindable
     public String getInputPassword() {
@@ -66,5 +67,15 @@ public class AuthModel extends BaseObservable {
     public void setUserPassword(String userPassword) {
         mUserPassword = userPassword;
         notifyPropertyChanged(BR.userPassword);
+    }
+
+    @Bindable
+    public boolean isFingerAuth() {
+        return mFingerAuth;
+    }
+
+    public void setFingerAuth(boolean fingerAuth) {
+        mFingerAuth = fingerAuth;
+        notifyPropertyChanged(BR.fingerAuth);
     }
 }

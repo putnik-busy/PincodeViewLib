@@ -29,7 +29,7 @@
             android:textSize="13.44sp"
             app:fontName='@{"OpenSans-Regular.ttf"}'/>
 
-        <com.ross.pincodeviewlib.view.CustomCircleView
+        <com.ross.pincodeviewlib.view.CircleView
             android:id="@+id/view3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -67,7 +67,7 @@
                 android:text="@string/repeat_pin_code"
                 android:textSize="13.44sp"/>
 
-            <com.ross.pincodeviewlib.view.CustomCircleView
+            <com.ross.pincodeviewlib.view.CircleView
                 android:id="@+id/view2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -83,7 +83,7 @@
 
         </LinearLayout>
 
-        <com.ross.pincodeviewlib.view.CustomKeyBoardView
+        <com.ross.pincodeviewlib.view.KeyBoardView
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
             android:layout_height="250dp"
@@ -93,7 +93,9 @@
             app:divider_visible="false"
             app:error="@{model.error}"
             app:errorChar="@{model.errorChar}"
+            app:fontName='@{"OpenSans-Regular.ttf"}'
             app:input_password="@={model.globalUserPassword}"
+            app:key_text_color="@color/colorAccent"
             app:key_text_size="23.25sp"/>
     </RelativeLayout>
 </layout>

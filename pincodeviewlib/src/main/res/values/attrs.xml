@@ -13,6 +13,7 @@
 
     <declare-styleable name="KeyBoardView">
         <attr name="digits" format="integer"/>
+        <attr name="key_text_color" format="integer"/>
         <attr name="input_password" format="string"/>
         <attr name="key_text_size" format="dimension"/>
         <attr name="divider_visible" format="boolean"/>
@@ -23,11 +24,5 @@
         <attr name="erase_icon_height" format="dimension"/>
         <attr name="finger_icon_width" format="dimension"/>
         <attr name="finger_icon_height" format="dimension"/>
-    </declare-styleable>
-
-    <declare-styleable name="InputTextView">
-        <attr name="digit_count" format="integer" />
-        <attr name="digit_width" format="dimension" />
-        <attr name="digit_input" format="string" />
     </declare-styleable>
 </resources>

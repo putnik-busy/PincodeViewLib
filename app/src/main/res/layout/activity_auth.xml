@@ -19,7 +19,7 @@
         android:layout_height="match_parent"
         android:background="@color/mainBackgroundColor">
 
-        <com.ross.pincodeviewlib.view.CustomCircleView
+        <com.ross.pincodeviewlib.view.CircleView
             android:id="@+id/circleView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -34,7 +34,7 @@
             app:number_all="@{model.numberAllDrawablePinCode}"
             app:number_filled="@{model.numberFillDrawablePinCode}"/>
 
-        <com.ross.pincodeviewlib.view.CustomKeyBoardView
+        <com.ross.pincodeviewlib.view.KeyBoardView
             android:id="@+id/keyboard"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -43,6 +43,10 @@
             app:digits="@{model.numberAllDrawablePinCode}"
             app:divider_visible="false"
             app:error="@{model.error}"
+            app:fingerAuth="@{model.fingerAuth}"
+            app:finger_visible="true"
+            app:key_text_color="@color/colorAccent"
+            app:fontName='@{"OpenSans-Regular.ttf"}'
             app:input_password="@={model.inputPassword}"
             app:key_text_size="23.25sp"/>
     </RelativeLayout>

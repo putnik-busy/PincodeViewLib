@@ -35,7 +35,7 @@ import static com.ross.pincodeviewlib.constants.Constants.KEY_PAD_ROWS;
 /**
  * @author Sergey Rodionov
  */
-public class CustomKeyBoardView extends View {
+public class KeyBoardView extends View {
 
     private double eraseIconWidth;
     private double eraseIconHeight;
@@ -49,12 +49,12 @@ public class CustomKeyBoardView extends View {
     private int keyViewWidth;
     private int keyViewHeight;
     private int digits;
+    private int keyTextColor;
     private int errorChar = -1;
 
     private SparseIntArray mTouchXMap;
     private SparseIntArray mTouchYMap;
 
-    private Typeface mTypeface;
     private TextPaint mTextPaint;
     private Paint mCirclePaint;
     private Paint mPaint;
@@ -64,24 +64,23 @@ public class CustomKeyBoardView extends View {
     private boolean blockInputChar;
     private boolean clearText;
     private boolean longPressed;
-    private boolean fingerAuth;
 
-    private String passCodeText = "";
+    private String passCodeText;
 
     private Handler mHandler;
     private Runnable mLongPress;
-    private List<KeyRect> mListKeyRectView;
+    private List<KeyRectView> mListKeyRectView;
     private TextChangeListener mTextChangeListener;
 
-    public CustomKeyBoardView(Context context) {
+    public KeyBoardView(Context context) {
         this(context, null);
     }
 
-    public CustomKeyBoardView(Context context, AttributeSet attrs) {
+    public KeyBoardView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CustomKeyBoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public KeyBoardView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
@@ -93,6 +92,8 @@ public class CustomKeyBoardView extends View {
 
             digits = values.getInteger(R.styleable.KeyBoardView_digits, 0);
 
+            keyTextColor = values.getInteger(R.styleable.KeyBoardView_key_text_color, 0);
+
             passCodeText = values.getString(R.styleable.KeyBoardView_input_password);
             passCodeText = "";
 
@@ -103,11 +104,6 @@ public class CustomKeyBoardView extends View {
 
             fingerIconVisible = values.getBoolean(R.styleable.KeyBoardView_finger_visible, false);
 
-            int digitHorizontalPadding = (int) values.getDimension(R.styleable.KeyBoardView_digit_spacing,
-                    getResources().getDimension(R.dimen.digit_horizontal_padding));
-
-            int digitVerticalPadding = (int) values.getDimension(R.styleable.KeyBoardView_digit_vertical_padding,
-                    getResources().getDimension(R.dimen.digit_vertical_padding));
             eraseIconWidth = (int) values.getDimension(R.styleable.KeyBoardView_erase_icon_width,
                     getResources().getDimension(R.dimen.erase_icon_width));
             eraseIconHeight = (int) values.getDimension(R.styleable.KeyBoardView_erase_icon_height,
@@ -128,6 +124,10 @@ public class CustomKeyBoardView extends View {
         }
         values.recycle();
         preparePaint();
+
+        if (keyTextColor != 0) {
+            setKeyTextColor(keyTextColor);
+        }
     }
 
     private void preparePaint() {
@@ -143,12 +143,9 @@ public class CustomKeyBoardView extends View {
     }
 
     public void setTypeface(Typeface typeface) {
-        if (mTypeface != typeface) {
-            mTypeface = typeface;
-            mTextPaint.setTypeface(typeface);
-            requestLayout();
-            postInvalidate();
-        }
+        mTextPaint.setTypeface(typeface);
+        requestLayout();
+        postInvalidate();
     }
 
     public void setKeyTextColor(int color) {
@@ -157,19 +154,13 @@ public class CustomKeyBoardView extends View {
         postInvalidate();
     }
 
-    public void setKeyTextSize(float size) {
-        mTextPaint.setTextSize(size);
-        requestLayout();
-        postInvalidate();
-    }
-
-    private void initialiseKeyRects() {
+    private void initialiseKeyRect() {
         mListKeyRectView.clear();
         int x = keyViewStartX, y = keyViewStartY;
         int keysCount = getKeysCount();
         for (int i = 1; i <= keysCount; i++) {
             mListKeyRectView.add(
-                    new KeyRect(this,
+                    new KeyRectView(this,
                             new Rect(x, y, x + keyViewWidth, y + keyViewHeight),
                             String.valueOf(i)));
             x += keyViewWidth;
@@ -193,6 +184,9 @@ public class CustomKeyBoardView extends View {
 
     private Bitmap returnScaledBitmapFromResource(int id, double width, double height) {
         Bitmap icon = BitmapFactory.decodeResource(getResources(), id);
+        if (keyTextColor != 0) {
+            icon = changeColorImage(icon);
+        }
         return Bitmap.createScaledBitmap(icon, DimensionUtils.dpToPx(getContext(), width),
                 DimensionUtils.dpToPx(getContext(), height), true);
     }
@@ -202,7 +196,7 @@ public class CustomKeyBoardView extends View {
         keyViewStartY = 0;
         keyViewWidth = getMeasuredWidth() / Constants.KEY_PAD_COLS;
         keyViewHeight = getMeasuredHeight() / Constants.KEY_PAD_ROWS;
-        initialiseKeyRects();
+        initialiseKeyRect();
     }
 
     @Override
@@ -211,28 +205,21 @@ public class CustomKeyBoardView extends View {
         drawKeyPad(canvas);
     }
 
-    private void drawDividerHorizontal(Canvas canvas, KeyRect rect) {
+    private void drawDividerHorizontal(Canvas canvas, KeyRectView rect) {
         mPaint.setColor(Color.argb(255, 0, 0, 0));
         mPaint.setAlpha(40);
         canvas.drawLine(0, rect.getRect().bottom, getMeasuredWidth(), rect.getRect().bottom, mPaint);
     }
 
-    private void drawDividerVertical(Canvas canvas, KeyRect rect) {
+    private void drawDividerVertical(Canvas canvas, KeyRectView rect) {
         mPaint.setColor(Color.argb(255, 0, 0, 0));
         mPaint.setAlpha(40);
         canvas.drawLine(rect.getRect().right, 0, rect.getRect().right, getMeasuredHeight(), mPaint);
     }
 
     private void drawKeyPad(Canvas canvas) {
-        for (KeyRect rect : mListKeyRectView) {
+        for (KeyRectView rect : mListKeyRectView) {
 
-          /*  if (mRect == keyRects.get(9) || mRect == keyRects.get(11)) {
-                Paint tempPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-                tempPaint.setColor(Color.GRAY);
-                canvas.drawRect(mRect.mRect, tempPaint);
-            }*/
-
-            //mTextPaint.setColor(Color.argb(255, 0, 0, 0));
             if (rect == mListKeyRectView.get(11) || (rect == mListKeyRectView.get(9) &&
                     fingerIconVisible && rect.getBitmapValue() != null)) {
 
@@ -241,7 +228,6 @@ public class CustomKeyBoardView extends View {
                 canvas.drawBitmap(rect.getBitmapValue(), rect.getRect().exactCenterX() - iconWidth / 2,
                         (rect.getRect().exactCenterY() - iconHeight / 5), mPaint);
             } else {
-                mTextPaint.setColor(Color.WHITE);
                 float textWidth = mTextPaint.measureText(rect.getValue());
                 canvas.drawText(rect.getValue(), rect.getRect().exactCenterX() - textWidth / 2,
                         rect.getRect().exactCenterY() + mTextPaint.getTextSize() / 2, mTextPaint);
@@ -269,14 +255,14 @@ public class CustomKeyBoardView extends View {
     protected void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
         int widthMode = MeasureSpec.getMode(widthMeasureSpec);
         int heightMode = MeasureSpec.getMode(heightMeasureSpec);
-        int measuredWidth = 0, measuredHeight = 0;
+        int measuredWidth = 0;
+        int measuredHeight = 0;
         if (widthMode == MeasureSpec.EXACTLY || widthMode == MeasureSpec.AT_MOST) {
             measuredWidth = MeasureSpec.getSize(widthMeasureSpec);
         }
 
         if (heightMode != MeasureSpec.EXACTLY) {
-            double height = MeasureSpec.getSize(heightMeasureSpec) - (keyViewHeight * KEY_PAD_ROWS);
-            measuredHeight = (int) height;
+            measuredHeight = MeasureSpec.getSize(heightMeasureSpec) - (keyViewHeight * KEY_PAD_ROWS);
         } else {
             measuredHeight = MeasureSpec.getSize(heightMeasureSpec);
         }
@@ -336,10 +322,11 @@ public class CustomKeyBoardView extends View {
     }
 
     private void findKeyPressed(int downEventX, int downEventY, int upEventX, int upEventY) {
-        for (final KeyRect keyRect : mListKeyRectView) {
+        for (final KeyRectView keyRect : mListKeyRectView) {
             if (keyRect.getRect().contains(downEventX, downEventY)
                     && keyRect.getRect().contains(upEventX, upEventY)) {
-                keyRect.playRippleAnim(new KeyRect.RippleAnimListener() {
+                keyRect.playRippleAnim(new KeyRectView.RippleAnimListener() {
+
                     @Override
                     public void onStart() {
                         if (keyRect.getValue().equals("") && fingerIconVisible) {
@@ -444,7 +431,7 @@ public class CustomKeyBoardView extends View {
             reset();
             setBlockInputChar(false);
         }
-        for (KeyRect keyRect : mListKeyRectView) {
+        for (KeyRectView keyRect : mListKeyRectView) {
             keyRect.setError();
         }
     }
@@ -464,14 +451,36 @@ public class CustomKeyBoardView extends View {
     }
 
     public void setFingerAuth(boolean fingerAuth) {
-        this.fingerAuth = fingerAuth;
-        for (KeyRect rect : mListKeyRectView) {
-            if (rect == mListKeyRectView.get(9) && fingerIconVisible) {
+        for (KeyRectView rect : mListKeyRectView) {
+            if (rect == mListKeyRectView.get(9) && fingerIconVisible && fingerAuth) {
                 rect.setBitmapValue(returnScaledBitmapFromResource(R.drawable.form_filled,
                         fingerIconWidth, fingerIconHeight));
             }
         }
         invalidate();
+    }
+
+    private Bitmap changeColorImage(Bitmap bitmap) {
+        int inWidth = bitmap.getWidth();
+        int inHeight = bitmap.getHeight();
+        Bitmap.Config config = bitmap.getConfig();
+        int[] inPixels = new int[inWidth * inHeight];
+
+        Bitmap copyBitmap = bitmap.copy(config, true);
+        int outWidth = copyBitmap.getWidth();
+        int outHeight = copyBitmap.getHeight();
+        int[] outPixels = new int[outWidth * outHeight];
+
+        bitmap.getPixels(inPixels, 0, inWidth, 0, 0, inWidth, inHeight);
+
+        for (int i = 0; i < inPixels.length; i++) {
+
+            if (inPixels[i] != Color.TRANSPARENT) {
+                outPixels[i] = keyTextColor;
+            }
+        }
+        copyBitmap.setPixels(outPixels, 0, outWidth, 0, 0, outWidth, outHeight);
+        return copyBitmap;
     }
 
     public int getKeysCount() {
@@ -498,31 +507,6 @@ public class CustomKeyBoardView extends View {
         this.blockInputChar = blockInputChar;
     }
 
-    @BindingAdapter("digits")
-    public static void setDigits(CustomKeyBoardView view, int number_all) {
-        view.setDigitLength(number_all);
-    }
-
-    @BindingAdapter("fingerAuth")
-    public static void setFingerAuth(CustomKeyBoardView view, boolean fingerAuth) {
-        view.setFingerAuth(fingerAuth);
-    }
-
-    @BindingAdapter("error")
-    public static void setError(CustomKeyBoardView view, boolean error) {
-        view.setError(error);
-    }
-
-    @BindingAdapter("clearText")
-    public static void setClearText(CustomKeyBoardView view, boolean clearText) {
-        view.setClearText(clearText);
-    }
-
-    @BindingAdapter("errorChar")
-    public static void setErrorChar(CustomKeyBoardView view, int errorChar) {
-        view.setErrorChar(errorChar);
-    }
-
     public int getErrorChar() {
         return errorChar;
     }
@@ -531,9 +515,34 @@ public class CustomKeyBoardView extends View {
         this.errorChar = errorChar;
     }
 
+    @BindingAdapter("digits")
+    public static void setDigits(KeyBoardView view, int number_all) {
+        view.setDigitLength(number_all);
+    }
+
+    @BindingAdapter("fingerAuth")
+    public static void setFingerAuth(KeyBoardView view, boolean fingerAuth) {
+        view.setFingerAuth(fingerAuth);
+    }
+
+    @BindingAdapter("error")
+    public static void setError(KeyBoardView view, boolean error) {
+        view.setError(error);
+    }
+
+    @BindingAdapter("clearText")
+    public static void setClearText(KeyBoardView view, boolean clearText) {
+        view.setClearText(clearText);
+    }
+
+    @BindingAdapter("errorChar")
+    public static void setErrorChar(KeyBoardView view, int errorChar) {
+        view.setErrorChar(errorChar);
+    }
+
     @BindingAdapter(value = {"input_password", "bind:input_passwordAttrChanged"},
             requireAll = false)
-    public static void setInputPasspord(final CustomKeyBoardView view, String password,
+    public static void setInputPassword(final KeyBoardView view, String password,
                                         final InverseBindingListener passwordTextAttrChanged) {
         view.setOnTextChangeListener(new TextChangeListener() {
             @Override
@@ -544,7 +553,7 @@ public class CustomKeyBoardView extends View {
     }
 
     @InverseBindingAdapter(attribute = "bind:input_password", event = "bind:input_passwordAttrChanged")
-    public static String getInputPassword(CustomKeyBoardView view) {
+    public static String getInputPassword(KeyBoardView view) {
         return view.getPassCodeText();
     }
 }

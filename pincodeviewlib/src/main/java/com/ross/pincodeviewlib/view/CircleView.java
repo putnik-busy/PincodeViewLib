@@ -16,7 +16,7 @@ import com.ross.pincodeviewlib.R;
 /**
  * @author Sergey Rodionov
  */
-public class CustomCircleView extends View {
+public class CircleView extends View {
 
     private int numberFilled;
     private int numberAll;
@@ -33,15 +33,15 @@ public class CustomCircleView extends View {
     private Bitmap mEmptyDrawable;
     private Bitmap mErrorDrawable;
 
-    public CustomCircleView(Context context) {
+    public CircleView(Context context) {
         this(context, null);
     }
 
-    public CustomCircleView(Context context, @Nullable AttributeSet attrs) {
+    public CircleView(Context context, @Nullable AttributeSet attrs) {
         this(context, attrs, 0);
     }
 
-    public CustomCircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
+    public CircleView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
         init(context, attrs, defStyleAttr);
     }
@@ -172,22 +172,22 @@ public class CustomCircleView extends View {
         invalidate();
     }
 
-    public void setNumberAll(CustomCircleView customView, int numberAll) {
+    public void setNumberAll(CircleView customView, int numberAll) {
         setNumberAll(numberAll);
     }
 
     @BindingAdapter("number_all")
-    public static void numberAll(CustomCircleView view, int number_all) {
+    public static void numberAll(CircleView view, int number_all) {
         view.setNumberAll(number_all);
     }
 
     @BindingAdapter("number_filled")
-    public static void numberFilled(CustomCircleView view, int number_filled) {
+    public static void numberFilled(CircleView view, int number_filled) {
         view.setNumberFilled(number_filled);
     }
 
     @BindingAdapter("error_char")
-    public static void errorChar(CustomCircleView view, int errorChar) {
+    public static void errorChar(CircleView view, int errorChar) {
         view.setErrorChar(errorChar);
     }
 
