@@ -27,9 +27,11 @@ import com.ross.pincodeviewlib.constants.Constants;
 import com.ross.pincodeviewlib.utils.DimensionUtils;
 import com.ross.pincodeviewlib.utils.ToastUtil;
 
+import java.nio.IntBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
+import static android.graphics.Color.argb;
 import static com.ross.pincodeviewlib.constants.Constants.KEY_PAD_ROWS;
 
 /**
@@ -137,7 +139,7 @@ public class KeyBoardView extends View {
         mCirclePaint.setStyle(Paint.Style.FILL);
         mPaint.setStyle(Paint.Style.FILL);
         mTextPaint.setStyle(Paint.Style.FILL);
-        mTextPaint.setColor(Color.argb(255, 0, 0, 0));
+        mTextPaint.setColor(argb(255, 0, 0, 0));
         mTextPaint.density = getResources().getDisplayMetrics().density;
         mTextPaint.setTextSize(keyTextSize);
     }
@@ -183,7 +185,9 @@ public class KeyBoardView extends View {
     }
 
     private Bitmap returnScaledBitmapFromResource(int id, double width, double height) {
-        Bitmap icon = BitmapFactory.decodeResource(getResources(), id);
+        BitmapFactory.Options opt = new BitmapFactory.Options();
+        opt.inMutable = true;
+        Bitmap icon = BitmapFactory.decodeResource(getResources(), id, opt);
         if (keyTextColor != 0) {
             icon = changeColorImage(icon);
         }
@@ -206,13 +210,13 @@ public class KeyBoardView extends View {
     }
 
     private void drawDividerHorizontal(Canvas canvas, KeyRectView rect) {
-        mPaint.setColor(Color.argb(255, 0, 0, 0));
+        mPaint.setColor(argb(255, 0, 0, 0));
         mPaint.setAlpha(40);
         canvas.drawLine(0, rect.getRect().bottom, getMeasuredWidth(), rect.getRect().bottom, mPaint);
     }
 
     private void drawDividerVertical(Canvas canvas, KeyRectView rect) {
-        mPaint.setColor(Color.argb(255, 0, 0, 0));
+        mPaint.setColor(argb(255, 0, 0, 0));
         mPaint.setAlpha(40);
         canvas.drawLine(rect.getRect().right, 0, rect.getRect().right, getMeasuredHeight(), mPaint);
     }
@@ -461,26 +465,24 @@ public class KeyBoardView extends View {
     }
 
     private Bitmap changeColorImage(Bitmap bitmap) {
-        int inWidth = bitmap.getWidth();
-        int inHeight = bitmap.getHeight();
-        Bitmap.Config config = bitmap.getConfig();
-        int[] inPixels = new int[inWidth * inHeight];
+        int pixelCount = bitmap.getWidth() * bitmap.getHeight();
+        IntBuffer buffer = IntBuffer.allocate(pixelCount);
+        bitmap.copyPixelsToBuffer(buffer);
+        int[] array = buffer.array();
+        int alpha = (keyTextColor >> 24) & 0xff; // or color >>> 24
+        int red = (keyTextColor >> 16) & 0xff;
+        int green = (keyTextColor >> 8) & 0xff;
+        int blue = (keyTextColor) & 0xff;
 
-        Bitmap copyBitmap = bitmap.copy(config, true);
-        int outWidth = copyBitmap.getWidth();
-        int outHeight = copyBitmap.getHeight();
-        int[] outPixels = new int[outWidth * outHeight];
-
-        bitmap.getPixels(inPixels, 0, inWidth, 0, 0, inWidth, inHeight);
-
-        for (int i = 0; i < inPixels.length; i++) {
-
-            if (inPixels[i] != Color.TRANSPARENT) {
-                outPixels[i] = keyTextColor;
+        for (int i = 0; i < pixelCount; i++) {
+            if (array[i] != Color.TRANSPARENT) {
+                array[i] = Color.argb(alpha,blue,green,red);
             }
         }
-        copyBitmap.setPixels(outPixels, 0, outWidth, 0, 0, outWidth, outHeight);
-        return copyBitmap;
+        buffer.rewind();
+        bitmap.copyPixelsFromBuffer(buffer);
+
+        return bitmap;
     }
 
     public int getKeysCount() {
