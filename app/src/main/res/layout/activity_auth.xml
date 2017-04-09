@@ -16,8 +16,7 @@
     <RelativeLayout
         android:id="@+id/activity_main"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/mainBackgroundColor">
+        android:layout_height="match_parent">
 
         <com.ross.pincodeviewlib.view.CircleView
             android:id="@+id/circleView"
@@ -44,8 +43,7 @@
             app:divider_visible="false"
             app:error="@{model.error}"
             app:fingerAuth="@{model.fingerAuth}"
-            app:finger_visible="true"
-            app:key_text_color="@color/colorAccent"
+            app:finger_visible="false"
             app:fontName='@{"OpenSans-Regular.ttf"}'
             app:input_password="@={model.inputPassword}"
             app:key_text_size="23.25sp"/>

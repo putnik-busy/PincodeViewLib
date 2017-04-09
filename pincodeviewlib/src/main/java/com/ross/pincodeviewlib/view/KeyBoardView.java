@@ -129,6 +129,8 @@ public class KeyBoardView extends View {
 
         if (keyTextColor != 0) {
             setKeyTextColor(keyTextColor);
+        } else {
+            keyTextColor = Color.BLACK;
         }
     }
 
@@ -161,10 +163,8 @@ public class KeyBoardView extends View {
         int x = keyViewStartX, y = keyViewStartY;
         int keysCount = getKeysCount();
         for (int i = 1; i <= keysCount; i++) {
-            mListKeyRectView.add(
-                    new KeyRectView(this,
-                            new Rect(x, y, x + keyViewWidth, y + keyViewHeight),
-                            String.valueOf(i)));
+            mListKeyRectView.add(new KeyRectView(this, new Rect(x, y, x + keyViewWidth,
+                    y + keyViewHeight), String.valueOf(i)));
             x += keyViewWidth;
             if (i % 3 == 0) {
                 y += keyViewHeight;
@@ -173,15 +173,15 @@ public class KeyBoardView extends View {
         }
 
         if (fingerIconVisible) {
-            mListKeyRectView.get(9).setBitmapValue(
-                    returnScaledBitmapFromResource(R.drawable.finger, fingerIconWidth, fingerIconHeight));
+            mListKeyRectView.get(9).setBitmapValue(returnScaledBitmapFromResource(
+                    R.drawable.finger, fingerIconWidth, fingerIconHeight));
         }
 
         mListKeyRectView.get(9).setValue("");
         mListKeyRectView.get(10).setValue("0");
         mListKeyRectView.get(11).setValue(Constants.ERASE_CHAR);
-        mListKeyRectView.get(11).setBitmapValue(
-                returnScaledBitmapFromResource(R.drawable.erase, eraseIconWidth, eraseIconHeight));
+        mListKeyRectView.get(11).setBitmapValue(returnScaledBitmapFromResource(
+                R.drawable.erase, eraseIconWidth, eraseIconHeight));
     }
 
     private Bitmap returnScaledBitmapFromResource(int id, double width, double height) {
@@ -457,7 +457,7 @@ public class KeyBoardView extends View {
     public void setFingerAuth(boolean fingerAuth) {
         for (KeyRectView rect : mListKeyRectView) {
             if (rect == mListKeyRectView.get(9) && fingerIconVisible && fingerAuth) {
-                rect.setBitmapValue(returnScaledBitmapFromResource(R.drawable.form_filled,
+                rect.setBitmapValue(returnScaledBitmapFromResource(R.drawable.ok,
                         fingerIconWidth, fingerIconHeight));
             }
         }
@@ -469,14 +469,15 @@ public class KeyBoardView extends View {
         IntBuffer buffer = IntBuffer.allocate(pixelCount);
         bitmap.copyPixelsToBuffer(buffer);
         int[] array = buffer.array();
-        int alpha = (keyTextColor >> 24) & 0xff; // or color >>> 24
+
+        int alpha = (keyTextColor >> 24) & 0xff;
         int red = (keyTextColor >> 16) & 0xff;
         int green = (keyTextColor >> 8) & 0xff;
         int blue = (keyTextColor) & 0xff;
 
         for (int i = 0; i < pixelCount; i++) {
             if (array[i] != Color.TRANSPARENT) {
-                array[i] = Color.argb(alpha,blue,green,red);
+                array[i] = Color.argb(alpha, blue, green, red);
             }
         }
         buffer.rewind();

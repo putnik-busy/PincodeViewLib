@@ -15,8 +15,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/mainBackgroundColor">
+        android:layout_height="match_parent">
 
         <android.support.v7.widget.AppCompatTextView
             android:id="@+id/view7"
@@ -95,7 +94,6 @@
             app:errorChar="@{model.errorChar}"
             app:fontName='@{"OpenSans-Regular.ttf"}'
             app:input_password="@={model.globalUserPassword}"
-            app:key_text_color="@color/colorAccent"
             app:key_text_size="23.25sp"/>
     </RelativeLayout>
 </layout>
