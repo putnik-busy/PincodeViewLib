@@ -11,62 +11,8 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="2a967387-14b3-4c25-bbe3-d440b8d01444" name="Default" comment="">
-      <change type="DELETED" beforePath="$PROJECT_DIR$/app/.gitignore" afterPath="" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/build.gradle" afterPath="$PROJECT_DIR$/sample/build.gradle" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/proguard-rules.pro" afterPath="$PROJECT_DIR$/sample/proguard-rules.pro" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/androidTest/java/com/sergey/sample/ExampleInstrumentedTest.java" afterPath="$PROJECT_DIR$/sample/src/androidTest/java/com/sergey/sample/ExampleInstrumentedTest.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterPath="$PROJECT_DIR$/sample/src/main/AndroidManifest.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/assets/fonts/OpenSans-Regular.ttf" afterPath="$PROJECT_DIR$/sample/src/main/assets/fonts/OpenSans-Regular.ttf" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/Constants.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/Constants.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/activity/AuthActivity.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/activity/AuthActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/activity/PinCodeActivity.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/activity/PinCodeActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/activity/ResultAuthActivity.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/activity/ResultAuthActivity.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/converters/BooleanToVisibilityConverter.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/converters/BooleanToVisibilityConverter.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/customdependencies/TypefaceCustomDependency.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/customdependencies/TypefaceCustomDependency.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/dialogs/RossMaterialDialog.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/dialogs/RossMaterialDialog.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/model/AuthModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/model/AuthModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/model/HomeModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/model/HomeModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/model/PinCodeModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/model/PinCodeModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/viewmodel/AuthViewModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/viewmodel/AuthViewModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/viewmodel/HomeViewModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/viewmodel/HomeViewModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/java/com/sergey/sample/mvvm/viewmodel/PinCodeViewModel.java" afterPath="$PROJECT_DIR$/sample/src/main/java/com/sergey/sample/mvvm/viewmodel/PinCodeViewModel.java" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/empty_dot.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/drawable/empty_dot.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/error_dot.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/drawable/error_dot.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/drawable/filled_dot.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/drawable/filled_dot.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_auth.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/layout/activity_auth.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_home.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/layout/activity_home.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/layout/activity_pin.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/layout/activity_pin.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-hdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/sample/src/main/res/mipmap-hdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-mdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/sample/src/main/res/mipmap-mdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/sample/src/main/res/mipmap-xhdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/sample/src/main/res/mipmap-xxhdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/mipmap-xxxhdpi/ic_launcher.png" afterPath="$PROJECT_DIR$/sample/src/main/res/mipmap-xxxhdpi/ic_launcher.png" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/values-w820dp/dimens.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/values-w820dp/dimens.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/values/colors.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/values/colors.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/values/dimens.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/values/dimens.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/values/strings.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/main/res/values/styles.xml" afterPath="$PROJECT_DIR$/sample/src/main/res/values/styles.xml" />
-      <change type="MOVED" beforePath="$PROJECT_DIR$/app/src/test/java/com/sergey/sample/ExampleUnitTest.java" afterPath="$PROJECT_DIR$/sample/src/test/java/com/sergey/sample/ExampleUnitTest.java" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/gradle.xml" afterPath="$PROJECT_DIR$/.idea/gradle.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/adapters_1_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/adapters_1_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/animated_vector_drawable_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/animated_vector_drawable_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/appcompat_v7_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/espresso_core_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/espresso_core_2_2_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/espresso_idling_resource_2_2_2.xml" afterPath="$PROJECT_DIR$/.idea/libraries/espresso_idling_resource_2_2_2.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/exposed_instrumentation_api_publish_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/exposed_instrumentation_api_publish_0_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/library_1_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/library_1_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/rules_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/rules_0_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/runner_0_5.xml" afterPath="$PROJECT_DIR$/.idea/libraries/runner_0_5.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_compat_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_compat_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_core_ui_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_core_ui_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_core_utils_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_core_utils_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_fragment_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_fragment_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_media_compat_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_media_compat_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_v4_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_v4_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/libraries/support_vector_drawable_24_2_1.xml" afterPath="$PROJECT_DIR$/.idea/libraries/support_vector_drawable_24_2_1.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/modules.xml" afterPath="$PROJECT_DIR$/.idea/modules.xml" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.gitignore" afterPath="$PROJECT_DIR$/.gitignore" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/settings.gradle" afterPath="$PROJECT_DIR$/settings.gradle" />
     </list>
     <ignored path="Sample.iws" />
     <ignored path=".idea/workspace.xml" />
